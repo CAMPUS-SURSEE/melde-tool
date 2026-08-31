@@ -1,0 +1,1582 @@
+<!DOCTYPE html>
+<html lang="de-CH">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#FFFFFF">
+<title>Problem melden - Campus Sursee</title>
+<link rel="icon" type="image/svg+xml" href="https://www.campus-sursee.ch/wp-content/themes/campus-sursee/assets/images/Campus_Sursee_Hauptlogo_RGB.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --blau: #003C64;
+    --blau-tief: #002A47;
+    --blau-zart: #EFF4F8;
+    --rot: #C22B33;
+    --rot-zart: #FDF3F3;
+    --text: #14202B;
+    --text-schwach: #6B7A88;
+    --text-zart: #98A5B1;
+    --linie: #E7EBEF;
+    --linie-stark: #D3DAE1;
+    --weiss: #FFFFFF;
+    --radius: 16px;
+    --radius-klein: 12px;
+    --schatten-fokus: 0 0 0 4px rgba(0, 60, 100, 0.10);
+    --tempo: 420ms;
+    --kurve: cubic-bezier(0.22, 0.86, 0.28, 1);
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body { margin: 0; padding: 0; }
+
+  html {
+    background: var(--weiss);
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    background: var(--weiss);
+    color: var(--text);
+    font-size: 17px;
+    line-height: 1.55;
+    font-feature-settings: "cv05" 1, "ss01" 1;
+    min-height: 100vh;
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 28px 20px calc(28px + env(safe-area-inset-bottom));
+  }
+
+  .buehne {
+    width: 100%;
+    max-width: 560px;
+    display: flex;
+    flex-direction: column;
+    gap: 26px;
+  }
+
+  /* ---------- Marke ---------- */
+  .marke {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    animation: einblenden 600ms var(--kurve) both;
+  }
+
+  .marke img {
+    height: 42px;
+    width: auto;
+    max-width: 220px;
+    display: block;
+  }
+
+  .poc {
+    font-size: 12.5px;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+    color: var(--rot);
+    text-align: center;
+  }
+
+  /* ---------- Fortschritt ---------- */
+  .fortschritt {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .spur {
+    height: 3px;
+    border-radius: 3px;
+    background: var(--linie);
+    overflow: hidden;
+  }
+
+  .fuellung {
+    height: 100%;
+    width: 33.333%;
+    border-radius: 3px;
+    background: var(--blau);
+    transform-origin: left center;
+    transition: width var(--tempo) var(--kurve);
+  }
+
+  .schritt-zeile {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 12.5px;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-zart);
+  }
+
+  .schritt-zeile .rechts { color: var(--text-zart); }
+
+  /* ---------- Karte ---------- */
+  .karte {
+    background: var(--weiss);
+    border: 1px solid var(--linie);
+    border-radius: 22px;
+    padding: 30px 26px 28px;
+  }
+
+  .screen { display: none; }
+  .screen.sichtbar {
+    display: block;
+    animation: hereingleiten var(--tempo) var(--kurve) both;
+  }
+
+  @keyframes hereingleiten {
+    from { opacity: 0; transform: translateY(14px); }
+    to { opacity: 1; transform: none; }
+  }
+
+  @keyframes einblenden {
+    from { opacity: 0; transform: translateY(-6px); }
+    to { opacity: 1; transform: none; }
+  }
+
+  @keyframes pulsieren {
+    0%, 100% { opacity: 0.25; }
+    50% { opacity: 0.8; }
+  }
+
+  @keyframes dreh { to { transform: rotate(360deg); } }
+
+  @keyframes hakenZeichnen {
+    from { stroke-dashoffset: 60; }
+    to { stroke-dashoffset: 0; }
+  }
+
+  @keyframes ringWachsen {
+    from { opacity: 0; transform: scale(0.7); }
+    to { opacity: 1; transform: scale(1); }
+  }
+
+  h2 {
+    font-size: 25px;
+    line-height: 1.25;
+    margin: 0 0 6px;
+    font-weight: 600;
+    letter-spacing: -0.025em;
+  }
+
+  .lead {
+    color: var(--text-schwach);
+    font-size: 15.5px;
+    margin: 0 0 24px;
+  }
+
+  .feldgruppe { margin-bottom: 20px; }
+  .feldgruppe:last-of-type { margin-bottom: 0; }
+
+  label.feld-label,
+  .feld-label {
+    display: block;
+    font-weight: 600;
+    font-size: 13px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--text-schwach);
+    margin: 0 0 9px;
+  }
+
+  input[type="email"],
+  input[type="text"],
+  textarea {
+    width: 100%;
+    font-family: inherit;
+    font-size: 17px;
+    line-height: 1.45;
+    color: var(--text);
+    background: var(--weiss);
+    border: 1px solid var(--linie-stark);
+    border-radius: var(--radius);
+    padding: 15px 16px;
+    outline: none;
+    transition: border-color 180ms ease, box-shadow 180ms ease;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+
+  input::placeholder, textarea::placeholder { color: var(--text-zart); }
+
+  textarea { min-height: 128px; resize: vertical; }
+
+  input[type="email"]:focus,
+  input[type="text"]:focus,
+  textarea:focus {
+    border-color: var(--blau);
+    box-shadow: var(--schatten-fokus);
+  }
+
+  input.fehlerhaft, textarea.fehlerhaft {
+    border-color: var(--rot);
+  }
+  input.fehlerhaft:focus, textarea.fehlerhaft:focus {
+    box-shadow: 0 0 0 4px rgba(194, 43, 51, 0.10);
+  }
+
+  input[type="file"] { display: none; }
+
+  /* ---------- Abteilungs-Radios ---------- */
+  .abt-liste {
+    display: grid;
+    gap: 10px;
+  }
+
+  .abt-liste.fehlerhaft .abt-inner { border-color: rgba(194, 43, 51, 0.45); }
+
+  .abt { display: block; cursor: pointer; position: relative; }
+
+  .abt input { position: absolute; opacity: 0; width: 0; height: 0; }
+
+  .abt-inner {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    border: 1px solid var(--linie-stark);
+    border-radius: var(--radius);
+    padding: 14px 15px;
+    background: var(--weiss);
+    transition: border-color 180ms ease, box-shadow 180ms ease, transform 180ms var(--kurve), background 180ms ease;
+  }
+
+  .abt:active .abt-inner { transform: scale(0.985); }
+
+  @media (hover: hover) {
+    .abt:hover .abt-inner { border-color: var(--linie-stark); background: #FBFCFD; }
+  }
+
+  .abt input:focus-visible + .abt-inner {
+    border-color: var(--blau);
+    box-shadow: var(--schatten-fokus);
+  }
+
+  .abt input:checked + .abt-inner {
+    border-color: var(--blau);
+    box-shadow: inset 0 0 0 1px var(--blau);
+  }
+
+  .abt-icon {
+    flex: 0 0 auto;
+    width: 38px;
+    height: 38px;
+    border-radius: 11px;
+    background: var(--blau-zart);
+    color: var(--blau);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 200ms ease, transform 260ms var(--kurve);
+  }
+
+  .abt-icon svg { width: 20px; height: 20px; display: block; }
+
+  .abt input:checked + .abt-inner .abt-icon {
+    background: var(--blau);
+    color: #fff;
+    transform: scale(1.04);
+  }
+
+  .abt-text {
+    flex: 1 1 auto;
+    min-width: 0;
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+
+  .abt-text small {
+    display: block;
+    font-size: 13px;
+    font-weight: 400;
+    color: var(--text-schwach);
+    letter-spacing: 0;
+    margin-top: 1px;
+  }
+
+  .abt-marke {
+    flex: 0 0 auto;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    border: 1px solid var(--linie-stark);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    transition: background 180ms ease, border-color 180ms ease;
+  }
+
+  .abt-marke svg {
+    width: 12px;
+    height: 12px;
+    opacity: 0;
+    transform: scale(0.6);
+    transition: opacity 180ms ease, transform 220ms var(--kurve);
+  }
+
+  .abt input:checked + .abt-inner .abt-marke {
+    background: var(--blau);
+    border-color: var(--blau);
+  }
+
+  .abt input:checked + .abt-inner .abt-marke svg {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  /* ---------- Foto-Feld ---------- */
+  .foto-feld {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    border: 1px dashed var(--linie-stark);
+    border-radius: 18px;
+    background: var(--weiss);
+    padding: 30px 20px;
+    text-align: center;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 16px;
+    color: var(--text);
+    transition: border-color 200ms ease, background 200ms ease, transform 200ms var(--kurve);
+  }
+
+  .foto-feld:active { transform: scale(0.99); }
+
+  @media (hover: hover) {
+    .foto-feld:hover { border-color: var(--blau); background: #FBFCFD; }
+  }
+
+  .foto-feld .kamera {
+    width: 46px;
+    height: 46px;
+    border-radius: 14px;
+    background: var(--blau-zart);
+    color: var(--blau);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px;
+    transition: transform 260ms var(--kurve);
+  }
+
+  .foto-feld:active .kamera { transform: scale(0.94); }
+  .foto-feld .kamera svg { width: 24px; height: 24px; }
+  .foto-feld small { font-size: 13.5px; font-weight: 400; color: var(--text-schwach); }
+
+  .thumbs {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(92px, 1fr));
+    gap: 10px;
+    margin-top: 14px;
+  }
+
+  .thumb {
+    position: relative;
+    aspect-ratio: 1 / 1;
+    border-radius: 13px;
+    overflow: hidden;
+    background: #F6F8FA;
+    border: 1px solid var(--linie);
+    animation: hereingleiten 320ms var(--kurve) both;
+  }
+
+  .thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .thumb button {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: none;
+    padding: 0;
+    background: rgba(20, 32, 43, 0.62);
+    color: #fff;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+    transition: background 160ms ease, transform 160ms var(--kurve);
+  }
+
+  .thumb button svg { width: 12px; height: 12px; }
+  .thumb button:active { transform: scale(0.9); }
+
+  @media (hover: hover) {
+    .thumb button:hover { background: rgba(20, 32, 43, 0.85); }
+  }
+
+  .thumbs-nurlesen .thumb button { display: none; }
+
+  /* ---------- Buttons ---------- */
+  .aktionen {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 26px;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    width: 100%;
+    font-family: inherit;
+    font-size: 17px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    padding: 16px 20px;
+    border-radius: var(--radius);
+    border: 1px solid transparent;
+    cursor: pointer;
+    text-align: center;
+    -webkit-appearance: none;
+    appearance: none;
+    transition: background 180ms ease, color 180ms ease, border-color 180ms ease, transform 160ms var(--kurve), opacity 180ms ease;
+  }
+
+  .btn svg { width: 17px; height: 17px; flex: 0 0 auto; }
+  .btn:active { transform: scale(0.985); }
+
+  .btn-primaer { background: var(--blau); color: #fff; }
+  @media (hover: hover) {
+    .btn-primaer:hover { background: var(--blau-tief); }
+  }
+  .btn-primaer .pfeil { transition: transform 220ms var(--kurve); }
+  @media (hover: hover) {
+    .btn-primaer:hover .pfeil { transform: translateX(3px); }
+  }
+
+  .btn-sekundaer {
+    background: var(--weiss);
+    color: var(--text);
+    border-color: var(--linie-stark);
+  }
+  @media (hover: hover) {
+    .btn-sekundaer:hover { background: #FAFBFC; border-color: var(--linie-stark); }
+  }
+
+  .btn-still {
+    background: none;
+    border: none;
+    color: var(--text-schwach);
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    padding: 12px 8px;
+    width: 100%;
+    border-radius: var(--radius-klein);
+    transition: color 160ms ease, background 160ms ease;
+  }
+  @media (hover: hover) {
+    .btn-still:hover { color: var(--blau); background: #FAFBFC; }
+  }
+
+  .btn[disabled], .btn-still[disabled] {
+    opacity: 0.45;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  /* ---------- Meldungen ---------- */
+  .fehler {
+    display: none;
+    color: var(--rot);
+    font-size: 14.5px;
+    font-weight: 500;
+    margin-top: 10px;
+  }
+  .fehler.sichtbar {
+    display: block;
+    animation: hereingleiten 260ms var(--kurve) both;
+  }
+
+  .box-hinweis {
+    display: none;
+    align-items: flex-start;
+    gap: 10px;
+    background: var(--weiss);
+    border: 1px solid var(--linie-stark);
+    border-radius: var(--radius-klein);
+    padding: 12px 14px;
+    font-size: 14.5px;
+    color: var(--text-schwach);
+    margin-bottom: 22px;
+  }
+  .box-hinweis.sichtbar {
+    display: flex;
+    animation: hereingleiten 300ms var(--kurve) both;
+  }
+  .box-hinweis svg { width: 17px; height: 17px; flex: 0 0 auto; margin-top: 2px; color: var(--blau); }
+
+  .box-fehler {
+    display: none;
+    align-items: flex-start;
+    gap: 10px;
+    background: var(--rot-zart);
+    border: 1px solid rgba(194, 43, 51, 0.25);
+    border-radius: var(--radius-klein);
+    padding: 12px 14px;
+    font-size: 14.5px;
+    color: var(--rot);
+    margin-top: 18px;
+  }
+  .box-fehler.sichtbar {
+    display: flex;
+    animation: hereingleiten 300ms var(--kurve) both;
+  }
+  .box-fehler svg { width: 17px; height: 17px; flex: 0 0 auto; margin-top: 2px; }
+
+  /* ---------- E-Mail-Zeile (Schritt 3) ---------- */
+  .mail-zeile {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border: 1px solid var(--linie);
+    border-radius: var(--radius);
+    padding: 13px 15px;
+    background: #FBFCFD;
+  }
+
+  .mail-zeile .mail-icon {
+    flex: 0 0 auto;
+    color: var(--text-zart);
+    display: flex;
+  }
+  .mail-zeile .mail-icon svg { width: 18px; height: 18px; }
+
+  .mail-zeile .mail-wert {
+    flex: 1 1 auto;
+    min-width: 0;
+    font-size: 15.5px;
+    font-weight: 500;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .mail-zeile .aendern {
+    flex: 0 0 auto;
+    background: none;
+    border: none;
+    font-family: inherit;
+    font-size: 14.5px;
+    font-weight: 600;
+    color: var(--blau);
+    cursor: pointer;
+    padding: 4px 2px;
+    border-radius: 6px;
+    transition: opacity 160ms ease;
+  }
+  @media (hover: hover) {
+    .mail-zeile .aendern:hover { opacity: 0.7; }
+  }
+
+  /* ---------- Overlay ---------- */
+  .overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(255, 255, 255, 0.92);
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+    z-index: 60;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 28px;
+  }
+  .overlay.sichtbar {
+    display: flex;
+    animation: einblenden 220ms var(--kurve) both;
+  }
+
+  .spinner {
+    width: 42px;
+    height: 42px;
+    border: 3px solid var(--blau-zart);
+    border-top-color: var(--blau);
+    border-radius: 50%;
+    animation: dreh 850ms linear infinite;
+    margin-bottom: 20px;
+  }
+
+  .overlay p {
+    font-size: 17px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    color: var(--text);
+    margin: 0;
+  }
+  .overlay small {
+    display: block;
+    margin-top: 5px;
+    color: var(--text-schwach);
+    font-size: 14.5px;
+  }
+
+  /* ---------- Erfolg ---------- */
+  .erfolg { text-align: center; }
+
+  .erfolg .ring {
+    width: 76px;
+    height: 76px;
+    border-radius: 50%;
+    background: var(--blau-zart);
+    color: var(--blau);
+    margin: 4px auto 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: ringWachsen 420ms var(--kurve) both;
+  }
+
+  .erfolg .ring svg { width: 34px; height: 34px; }
+
+  .erfolg .ring path {
+    stroke-dasharray: 60;
+    stroke-dashoffset: 60;
+    animation: hakenZeichnen 520ms var(--kurve) 260ms both;
+  }
+
+  .zusammenfassung {
+    border: 1px solid var(--linie);
+    border-radius: var(--radius-klein);
+    padding: 13px 16px;
+    font-size: 15px;
+    color: var(--text-schwach);
+    margin: 4px 0 0;
+    word-break: break-word;
+  }
+
+  /* ---------- Klein ---------- */
+  @media (max-width: 520px) {
+    body { padding: 22px 14px calc(22px + env(safe-area-inset-bottom)); justify-content: flex-start; }
+    .buehne { gap: 20px; }
+    .karte { padding: 24px 18px 22px; border-radius: 20px; }
+    h2 { font-size: 23px; }
+    .marke img { height: 36px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="buehne">
+
+  <div class="marke">
+    <img src="https://www.campus-sursee.ch/wp-content/themes/campus-sursee/assets/images/Campus_Sursee_Hauptlogo_RGB.svg" alt="Campus Sursee">
+    <span class="poc">Proof of Concept</span>
+  </div>
+
+  <div class="fortschritt">
+    <div class="spur" aria-hidden="true"><div class="fuellung" id="fuellung"></div></div>
+    <div class="schritt-zeile">
+      <span id="schrittText">Schritt 1 von 3</span>
+      <span class="rechts" id="schrittName">Kontakt</span>
+    </div>
+  </div>
+
+  <div class="karte">
+
+    <!-- Schritt 1 -->
+    <section class="screen" id="screen1">
+      <h2>Wer meldet?</h2>
+      <p class="lead">Damit wir bei R&uuml;ckfragen auf dich zukommen k&ouml;nnen.</p>
+
+      <div class="feldgruppe">
+        <label class="feld-label" for="email">E-Mail-Adresse</label>
+        <input type="email" id="email" inputmode="email" autocomplete="email"
+               placeholder="vorname.name@campus-sursee.ch" spellcheck="false">
+        <div class="fehler" id="emailFehler">Bitte gib eine g&uuml;ltige E-Mail-Adresse ein.</div>
+      </div>
+
+      <div class="aktionen">
+        <button class="btn btn-primaer" id="btnWeiter1" type="button">
+          Weiter
+          <svg class="pfeil" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h13"/><path d="M12 5l7 7-7 7"/></svg>
+        </button>
+      </div>
+    </section>
+
+    <!-- Schritt 2 -->
+    <section class="screen" id="screen2">
+      <h2>Foto aufnehmen</h2>
+      <p class="lead">Fotografiere den Mangel oder Schaden. Mehrere Fotos sind m&ouml;glich.</p>
+
+      <label class="foto-feld" for="fotoInput">
+        <span class="kamera" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8.5A2.5 2.5 0 0 1 5.5 6H8l1.2-2h5.6L16 6h2.5A2.5 2.5 0 0 1 21 8.5v9A2.5 2.5 0 0 1 18.5 20h-13A2.5 2.5 0 0 1 3 17.5z"/><circle cx="12" cy="13" r="3.6"/></svg>
+        </span>
+        Foto aufnehmen oder ausw&auml;hlen
+        <small>Tippen zum Starten der Kamera</small>
+      </label>
+      <input type="file" id="fotoInput" accept="image/*" multiple>
+
+      <div class="fehler" id="fotoFehler"></div>
+      <div class="thumbs" id="thumbs"></div>
+
+      <div class="aktionen">
+        <button class="btn btn-primaer" id="btnWeiter2" type="button">
+          Weiter
+          <svg class="pfeil" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h13"/><path d="M12 5l7 7-7 7"/></svg>
+        </button>
+        <button class="btn btn-sekundaer" id="btnZurueck2" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H6"/><path d="M12 19l-7-7 7-7"/></svg>
+          Zur&uuml;ck
+        </button>
+        <button class="btn-still" id="btnUeberspringen" type="button">&Uuml;berspringen und manuell beschreiben</button>
+      </div>
+    </section>
+
+    <!-- Schritt 3 -->
+    <section class="screen" id="screen3">
+      <h2>Meldung pr&uuml;fen</h2>
+      <p class="lead">Bitte kontrolliere und erg&auml;nze die Angaben.</p>
+
+      <div class="box-hinweis" id="analyseHinweis">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><path d="M12 7.6h.01"/></svg>
+        <span>Automatische Analyse nicht verf&uuml;gbar &ndash; bitte manuell ausf&uuml;llen.</span>
+      </div>
+
+      <div class="feldgruppe">
+        <label class="feld-label" for="titel">Titel</label>
+        <input type="text" id="titel" placeholder="Kurze Bezeichnung des Problems">
+      </div>
+
+      <div class="feldgruppe">
+        <label class="feld-label" for="beschreibung">Beschreibung</label>
+        <textarea id="beschreibung" placeholder="Was ist das Problem? Wo genau befindet es sich?"></textarea>
+      </div>
+
+      <div class="feldgruppe">
+        <span class="feld-label" id="abtLabel">Zust&auml;ndige Abteilung</span>
+        <div class="abt-liste" id="abtListe" role="radiogroup" aria-labelledby="abtLabel">
+
+          <label class="abt">
+            <input type="radio" name="abteilung" value="Umgebungsdienst">
+            <span class="abt-inner">
+              <span class="abt-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M11 21c0-6.5 2.5-10 8-11.5"/><path d="M19.5 4.5C20.5 12 16.5 17 11 16.5 9.6 12 12.5 5.4 19.5 4.5z"/><path d="M6.5 21c-2-2.5-2.5-6-1.5-9"/></svg>
+              </span>
+              <span class="abt-text">Umgebungsdienst<small>Aussenanlagen, Gr&uuml;n, Reinigung</small></span>
+              <span class="abt-marke" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7"/></svg>
+              </span>
+            </span>
+          </label>
+
+          <label class="abt">
+            <input type="radio" name="abteilung" value="Technischer Dienst">
+            <span class="abt-inner">
+              <span class="abt-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M15.2 3.4a5 5 0 0 0-5.9 6.4L3.6 15.5a2.1 2.1 0 0 0 3 3l5.7-5.7a5 5 0 0 0 6.4-5.9l-2.9 2.9-2.5-.6-.6-2.5z"/></svg>
+              </span>
+              <span class="abt-text">Technischer Dienst<small>Geb&auml;ude, Haustechnik, Reparaturen</small></span>
+              <span class="abt-marke" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7"/></svg>
+              </span>
+            </span>
+          </label>
+
+          <label class="abt">
+            <input type="radio" name="abteilung" value="ICT-Servicedesk">
+            <span class="abt-inner">
+              <span class="abt-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="4" width="19" height="12.5" rx="2"/><path d="M8.5 20.5h7"/><path d="M12 16.5v4"/></svg>
+              </span>
+              <span class="abt-text">ICT-Servicedesk<small>Computer, Netzwerk, Software</small></span>
+              <span class="abt-marke" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7"/></svg>
+              </span>
+            </span>
+          </label>
+
+          <label class="abt">
+            <input type="radio" name="abteilung" value="Seminarsupport">
+            <span class="abt-inner">
+              <span class="abt-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4.5h16v10H4z"/><path d="M12 14.5v3"/><path d="M8 20.5l4-3 4 3"/><path d="M8 9.5l2.5 2.5L16 7"/></svg>
+              </span>
+              <span class="abt-text">Seminarsupport<small>R&auml;ume, Medientechnik, Anl&auml;sse</small></span>
+              <span class="abt-marke" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7"/></svg>
+              </span>
+            </span>
+          </label>
+
+        </div>
+      </div>
+
+      <div class="feldgruppe">
+        <span class="feld-label">Kontakt</span>
+        <div class="mail-zeile">
+          <span class="mail-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M3.5 7.5l8.5 6 8.5-6"/></svg>
+          </span>
+          <span class="mail-wert" id="emailAnzeige">&ndash;</span>
+          <button class="aendern" id="btnMailAendern" type="button">&Auml;ndern</button>
+        </div>
+      </div>
+
+      <div class="feldgruppe" id="fotoBlock3">
+        <span class="feld-label">Fotos</span>
+        <div class="thumbs thumbs-nurlesen" id="thumbs3"></div>
+      </div>
+
+      <div class="fehler" id="formFehler"></div>
+      <div class="box-fehler" id="sendeFehler">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5"/><path d="M12 16.4h.01"/></svg>
+        <span id="sendeFehlerText"></span>
+      </div>
+
+      <div class="aktionen">
+        <button class="btn btn-primaer" id="btnAbsenden" type="button">
+          Absenden
+          <svg class="pfeil" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h13"/><path d="M12 5l7 7-7 7"/></svg>
+        </button>
+        <button class="btn btn-sekundaer" id="btnZurueck3" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H6"/><path d="M12 19l-7-7 7-7"/></svg>
+          Zur&uuml;ck
+        </button>
+      </div>
+    </section>
+
+    <!-- Erfolg -->
+    <section class="screen" id="screenErfolg">
+      <div class="erfolg">
+        <div class="ring" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7"/></svg>
+        </div>
+        <h2>Vielen Dank!</h2>
+        <p class="lead">Deine Meldung wurde an den Servicedesk weitergeleitet.</p>
+        <div class="zusammenfassung" id="erfolgInfo"></div>
+        <div class="aktionen">
+          <button class="btn btn-sekundaer" id="btnNeu" type="button">Neue Meldung</button>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+</div>
+
+<div class="overlay" id="overlay" role="status" aria-live="polite">
+  <div class="spinner" aria-hidden="true"></div>
+  <p id="overlayText">Foto wird analysiert&hellip;</p>
+  <small id="overlaySub">Einen Moment bitte</small>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  /* ---------- Konfiguration ---------- */
+  var FLOW_A_URL = "https://default2553fb745dcc40728bb5399d18f72a.f9.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/24/workflows/3d711734243243caa84e0d7419af9874/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=uIK4uaOrpmIAhYa9noLKO9np3hwY37V1OQLsjkj92Iw";
+  var FLOW_B_URL = "https://default2553fb745dcc40728bb5399d18f72a.f9.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/06/workflows/97037b20231e48378a90d655e81731c7/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=Q5MDCT9gHDXhMztNnplvq7KR8oPf8awEkJ9nD9Zlt24";
+
+  var MAX_KANTE = 1600;
+  var JPEG_QUALITAET = 0.8;
+  var TIMEOUT_MS = 30000;
+  var MAX_FOTOS = 6;
+  var LS_KEY = "problemMelder.email";
+
+  /* ---------- Zustand ---------- */
+  var fotos = [];          // { name, contentBase64, dataUrl }
+  var aktuellerSchritt = 1;
+  var sendetGerade = false;
+
+  /* ---------- Kurzhelfer ---------- */
+  function $(id) { return document.getElementById(id); }
+
+  function zeigen(el, an) {
+    if (!el) { return; }
+    if (an) { el.classList.add("sichtbar"); } else { el.classList.remove("sichtbar"); }
+  }
+
+  function textSetzen(el, txt) {
+    if (el) { el.textContent = txt; }
+  }
+
+  /* ---------- Navigation ---------- */
+  var screens = {
+    1: "screen1",
+    2: "screen2",
+    3: "screen3",
+    4: "screenErfolg"
+  };
+
+  var schrittNamen = {
+    1: "Kontakt",
+    2: "Fotos",
+    3: "Übersicht",
+    4: "Gesendet"
+  };
+
+  function geheZu(nr) {
+    aktuellerSchritt = nr;
+    var key;
+    for (key in screens) {
+      if (Object.prototype.hasOwnProperty.call(screens, key)) {
+        var el = $(screens[key]);
+        if (el) {
+          if (String(nr) === String(key)) {
+            el.classList.remove("sichtbar");
+            /* Reflow erzwingen, damit die Einblend-Animation neu startet */
+            void el.offsetWidth;
+            el.classList.add("sichtbar");
+          } else {
+            el.classList.remove("sichtbar");
+          }
+        }
+      }
+    }
+
+    var fuellung = $("fuellung");
+    if (fuellung) {
+      var anteil = nr >= 4 ? 100 : Math.round((nr / 3) * 100);
+      fuellung.style.width = anteil + "%";
+    }
+
+    if (nr >= 4) {
+      textSetzen($("schrittText"), "Abgeschlossen");
+    } else {
+      textSetzen($("schrittText"), "Schritt " + nr + " von 3");
+    }
+    textSetzen($("schrittName"), schrittNamen[nr] || "");
+
+    try { window.scrollTo(0, 0); } catch (e) { /* egal */ }
+  }
+
+  /* ---------- Overlay ---------- */
+  function overlayAn(text, sub) {
+    textSetzen($("overlayText"), text || "Bitte warten…");
+    textSetzen($("overlaySub"), sub || "Einen Moment bitte");
+    zeigen($("overlay"), true);
+  }
+
+  function overlayAus() {
+    zeigen($("overlay"), false);
+  }
+
+  /* ---------- E-Mail ---------- */
+  function emailGueltig(wert) {
+    if (typeof wert !== "string") { return false; }
+    var w = wert.trim();
+    if (w.length < 5 || w.length > 254) { return false; }
+    return /^[^\s@]+@[^\s@]+\.[A-Za-z]{2,}$/.test(w);
+  }
+
+  function emailLesen() {
+    try {
+      var g = window.localStorage.getItem(LS_KEY);
+      return g ? g : "";
+    } catch (e) {
+      return "";
+    }
+  }
+
+  function emailSpeichern(wert) {
+    try { window.localStorage.setItem(LS_KEY, wert); } catch (e) { /* egal */ }
+  }
+
+  function aktuelleEmail() {
+    var feld = $("email");
+    return feld ? feld.value.trim() : "";
+  }
+
+  function emailAnzeigeAktualisieren() {
+    var wert = aktuelleEmail();
+    textSetzen($("emailAnzeige"), wert || "–");
+  }
+
+  /* ---------- Abteilung (Radios) ---------- */
+  var ABTEILUNGEN = ["Umgebungsdienst", "Technischer Dienst", "ICT-Servicedesk", "Seminarsupport"];
+
+  function abteilungNormieren(wert) {
+    if (!wert) { return ""; }
+    var klein = String(wert).trim().toLowerCase();
+    var i;
+    for (i = 0; i < ABTEILUNGEN.length; i++) {
+      if (ABTEILUNGEN[i].toLowerCase() === klein) { return ABTEILUNGEN[i]; }
+    }
+    return "";
+  }
+
+  function abteilungRadios() {
+    return document.querySelectorAll('input[name="abteilung"]');
+  }
+
+  function abteilungLesen() {
+    var liste = abteilungRadios();
+    var i;
+    for (i = 0; i < liste.length; i++) {
+      if (liste[i].checked) { return liste[i].value; }
+    }
+    return "";
+  }
+
+  function abteilungSetzen(wert) {
+    var ziel = abteilungNormieren(wert);
+    var liste = abteilungRadios();
+    var i;
+    for (i = 0; i < liste.length; i++) {
+      liste[i].checked = (ziel !== "" && liste[i].value === ziel);
+    }
+  }
+
+  function abteilungFehlerAus() {
+    var liste = $("abtListe");
+    if (liste) { liste.classList.remove("fehlerhaft"); }
+  }
+
+  /* ---------- Bildverarbeitung ---------- */
+  function dateiLesen(datei) {
+    return new Promise(function (aufloesen, ablehnen) {
+      var leser = new FileReader();
+      leser.onload = function () { aufloesen(leser.result); };
+      leser.onerror = function () { ablehnen(new Error("Datei konnte nicht gelesen werden.")); };
+      try {
+        leser.readAsDataURL(datei);
+      } catch (e) {
+        ablehnen(e);
+      }
+    });
+  }
+
+  function bildLaden(dataUrl) {
+    return new Promise(function (aufloesen, ablehnen) {
+      var bild = new Image();
+      bild.onload = function () { aufloesen(bild); };
+      bild.onerror = function () { ablehnen(new Error("Bild konnte nicht geladen werden.")); };
+      bild.src = dataUrl;
+    });
+  }
+
+  function verkleinern(bild) {
+    var b = bild.naturalWidth || bild.width;
+    var h = bild.naturalHeight || bild.height;
+    if (!b || !h) { throw new Error("Ungültige Bildgrösse."); }
+
+    var faktor = Math.min(1, MAX_KANTE / Math.max(b, h));
+    var zielB = Math.max(1, Math.round(b * faktor));
+    var zielH = Math.max(1, Math.round(h * faktor));
+
+    var leinwand = document.createElement("canvas");
+    leinwand.width = zielB;
+    leinwand.height = zielH;
+
+    var ctx = leinwand.getContext("2d");
+    if (!ctx) { throw new Error("Canvas nicht verfügbar."); }
+    ctx.fillStyle = "#FFFFFF";
+    ctx.fillRect(0, 0, zielB, zielH);
+    ctx.drawImage(bild, 0, 0, zielB, zielH);
+
+    return leinwand.toDataURL("image/jpeg", JPEG_QUALITAET);
+  }
+
+  function base64AusDataUrl(dataUrl) {
+    if (typeof dataUrl !== "string") { return ""; }
+    var pos = dataUrl.indexOf(",");
+    return pos >= 0 ? dataUrl.slice(pos + 1) : dataUrl;
+  }
+
+  function fotoVerarbeiten(datei, nummer) {
+    return dateiLesen(datei)
+      .then(function (dataUrl) { return bildLaden(dataUrl); })
+      .then(function (bild) {
+        var klein;
+        try {
+          klein = verkleinern(bild);
+        } catch (e) {
+          klein = bild.src; // Notfall: Original verwenden
+        }
+        return {
+          name: "foto" + nummer + ".jpg",
+          contentBase64: base64AusDataUrl(klein),
+          dataUrl: klein
+        };
+      });
+  }
+
+  function fotosNeuNummerieren() {
+    var i;
+    for (i = 0; i < fotos.length; i++) {
+      fotos[i].name = "foto" + (i + 1) + ".jpg";
+    }
+  }
+
+  function kreuzSvg() {
+    return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12"/><path d="M18 6L6 18"/></svg>';
+  }
+
+  function thumbsZeichnen() {
+    var ziel = $("thumbs");
+    var ziel3 = $("thumbs3");
+    var i;
+
+    if (ziel) {
+      ziel.innerHTML = "";
+      for (i = 0; i < fotos.length; i++) {
+        (function (index) {
+          var box = document.createElement("div");
+          box.className = "thumb";
+
+          var img = document.createElement("img");
+          img.src = fotos[index].dataUrl;
+          img.alt = "Foto " + (index + 1);
+          box.appendChild(img);
+
+          var weg = document.createElement("button");
+          weg.type = "button";
+          weg.setAttribute("aria-label", "Foto " + (index + 1) + " entfernen");
+          weg.innerHTML = kreuzSvg();
+          weg.addEventListener("click", function () {
+            fotos.splice(index, 1);
+            fotosNeuNummerieren();
+            thumbsZeichnen();
+          });
+          box.appendChild(weg);
+
+          ziel.appendChild(box);
+        }(i));
+      }
+      ziel.style.display = fotos.length ? "grid" : "none";
+    }
+
+    if (ziel3) {
+      ziel3.innerHTML = "";
+      for (i = 0; i < fotos.length; i++) {
+        var box3 = document.createElement("div");
+        box3.className = "thumb";
+        var img3 = document.createElement("img");
+        img3.src = fotos[i].dataUrl;
+        img3.alt = "Foto " + (i + 1);
+        box3.appendChild(img3);
+        ziel3.appendChild(box3);
+      }
+      var block3 = $("fotoBlock3");
+      if (block3) { block3.style.display = fotos.length ? "block" : "none"; }
+    }
+  }
+
+  /* ---------- Netzwerk ---------- */
+  function sendePlainText(url, nutzlast) {
+    return new Promise(function (aufloesen, ablehnen) {
+      var abgeschlossen = false;
+      var controller = null;
+      var optionen = {
+        method: "POST",
+        headers: { "Content-Type": "application/json;charset=UTF-8" },
+        body: JSON.stringify(nutzlast)
+      };
+
+      try {
+        if (typeof AbortController === "function") {
+          controller = new AbortController();
+          optionen.signal = controller.signal;
+        }
+      } catch (e) {
+        controller = null;
+      }
+
+      var uhr = window.setTimeout(function () {
+        if (abgeschlossen) { return; }
+        abgeschlossen = true;
+        if (controller) {
+          try { controller.abort(); } catch (e) { /* egal */ }
+        }
+        ablehnen(new Error("Zeitüberschreitung"));
+      }, TIMEOUT_MS);
+
+      fetch(url, optionen).then(function (antwort) {
+        return antwort.text().then(function (text) {
+          return { ok: antwort.ok, status: antwort.status, text: text };
+        });
+      }).then(function (ergebnis) {
+        if (abgeschlossen) { return; }
+        abgeschlossen = true;
+        window.clearTimeout(uhr);
+        if (!ergebnis.ok) {
+          ablehnen(new Error("Server antwortete mit Status " + ergebnis.status));
+          return;
+        }
+        aufloesen(ergebnis.text);
+      })["catch"](function (fehler) {
+        if (abgeschlossen) { return; }
+        abgeschlossen = true;
+        window.clearTimeout(uhr);
+        ablehnen(fehler instanceof Error ? fehler : new Error("Netzwerkfehler"));
+      });
+    });
+  }
+
+  function jsonParsenWeich(text) {
+    if (typeof text !== "string") { return null; }
+    var t = text.trim();
+    if (!t) { return null; }
+    var wert;
+    try {
+      wert = JSON.parse(t);
+    } catch (e) {
+      return null;
+    }
+    if (!wert || typeof wert !== "object") { return null; }
+    /* Falls die Antwort als Array oder verschachtelt kommt: robust aufloesen */
+    if (Object.prototype.toString.call(wert) === "[object Array]") {
+      wert = wert.length && wert[0] && typeof wert[0] === "object" ? wert[0] : null;
+      if (!wert) { return null; }
+    }
+    if (!hatAnalyseFelder(wert)) {
+      var kandidaten = ["body", "result", "analyse", "output", "data"];
+      var i;
+      for (i = 0; i < kandidaten.length; i++) {
+        var innen = wert[kandidaten[i]];
+        if (typeof innen === "string") {
+          var tiefer = jsonParsenWeich(innen);
+          if (tiefer && hatAnalyseFelder(tiefer)) { return tiefer; }
+        } else if (innen && typeof innen === "object" && hatAnalyseFelder(innen)) {
+          return innen;
+        }
+      }
+    }
+    return wert;
+  }
+
+  function feldText(objekt, name) {
+    if (!objekt) { return ""; }
+    var wert = objekt[name];
+    if (typeof wert === "string") { return wert.trim(); }
+    if (typeof wert === "number") { return String(wert); }
+    return "";
+  }
+
+  function hatAnalyseFelder(objekt) {
+    return !!(objekt && (feldText(objekt, "titel") || feldText(objekt, "beschreibung") || feldText(objekt, "abteilung")));
+  }
+
+  /* ---------- Schritt 3 befuellen ---------- */
+  function screen3Vorbereiten(analyse, hinweisZeigen) {
+    var titel = feldText(analyse, "titel");
+    var beschreibung = feldText(analyse, "beschreibung");
+    var abteilung = feldText(analyse, "abteilung"); // kann "Keine" o.ae. sein -> normiert zu ""
+
+    $("titel").value = titel;
+    $("beschreibung").value = beschreibung;
+    abteilungSetzen(abteilung);
+    emailAnzeigeAktualisieren();
+
+    $("titel").classList.remove("fehlerhaft");
+    $("beschreibung").classList.remove("fehlerhaft");
+    abteilungFehlerAus();
+
+    zeigen($("formFehler"), false);
+    zeigen($("sendeFehler"), false);
+    zeigen($("analyseHinweis"), !!hinweisZeigen);
+
+    thumbsZeichnen();
+    geheZu(3);
+  }
+
+  /* ---------- Ereignisse ---------- */
+
+  // Schritt 1
+  $("btnWeiter1").addEventListener("click", function () {
+    var feld = $("email");
+    var wert = feld.value.trim();
+    if (!emailGueltig(wert)) {
+      feld.classList.add("fehlerhaft");
+      zeigen($("emailFehler"), true);
+      try { feld.focus(); } catch (e) { /* egal */ }
+      return;
+    }
+    feld.value = wert;
+    feld.classList.remove("fehlerhaft");
+    zeigen($("emailFehler"), false);
+    emailSpeichern(wert);
+    emailAnzeigeAktualisieren();
+    geheZu(2);
+  });
+
+  $("email").addEventListener("input", function () {
+    $("email").classList.remove("fehlerhaft");
+    zeigen($("emailFehler"), false);
+  });
+
+  $("email").addEventListener("keydown", function (ereignis) {
+    if (ereignis.key === "Enter") {
+      ereignis.preventDefault();
+      $("btnWeiter1").click();
+    }
+  });
+
+  // Schritt 2 - Dateiauswahl
+  $("fotoInput").addEventListener("change", function (ereignis) {
+    var eingabe = ereignis.target;
+    var dateien = eingabe.files ? Array.prototype.slice.call(eingabe.files) : [];
+    if (!dateien.length) { return; }
+
+    zeigen($("fotoFehler"), false);
+    overlayAn("Fotos werden vorbereitet…", "Bilder werden verkleinert");
+
+    var platz = MAX_FOTOS - fotos.length;
+    var zuviel = dateien.length > platz;
+    if (platz <= 0) {
+      overlayAus();
+      eingabe.value = "";
+      textSetzen($("fotoFehler"), "Maximal " + MAX_FOTOS + " Fotos möglich.");
+      zeigen($("fotoFehler"), true);
+      return;
+    }
+    dateien = dateien.slice(0, platz);
+
+    var kette = Promise.resolve();
+    var fehlgeschlagen = 0;
+
+    dateien.forEach(function (datei) {
+      kette = kette.then(function () {
+        if (!datei || (datei.type && datei.type.indexOf("image/") !== 0)) {
+          fehlgeschlagen++;
+          return null;
+        }
+        return fotoVerarbeiten(datei, fotos.length + 1).then(function (foto) {
+          fotos.push(foto);
+        })["catch"](function () {
+          fehlgeschlagen++;
+        });
+      });
+    });
+
+    kette.then(function () {
+      fotosNeuNummerieren();
+      thumbsZeichnen();
+      overlayAus();
+      eingabe.value = "";
+      var meldungen = [];
+      if (fehlgeschlagen > 0) {
+        meldungen.push(fehlgeschlagen + " Datei(en) konnten nicht verarbeitet werden.");
+      }
+      if (zuviel) {
+        meldungen.push("Es werden maximal " + MAX_FOTOS + " Fotos übernommen.");
+      }
+      if (meldungen.length) {
+        textSetzen($("fotoFehler"), meldungen.join(" "));
+        zeigen($("fotoFehler"), true);
+      }
+    })["catch"](function () {
+      overlayAus();
+      eingabe.value = "";
+      textSetzen($("fotoFehler"), "Die Fotos konnten nicht verarbeitet werden. Bitte nochmals versuchen.");
+      zeigen($("fotoFehler"), true);
+    });
+  });
+
+  // Schritt 2 - Weiter (Analyse)
+  $("btnWeiter2").addEventListener("click", function () {
+    if (!fotos.length) {
+      textSetzen($("fotoFehler"), "Bitte mindestens ein Foto aufnehmen – oder den Schritt überspringen.");
+      zeigen($("fotoFehler"), true);
+      return;
+    }
+    zeigen($("fotoFehler"), false);
+
+    var nutzlast = {
+      email: aktuelleEmail(),
+      fotos: fotos.map(function (f) {
+        return { name: f.name, contentBase64: f.contentBase64 };
+      })
+    };
+
+    overlayAn("Foto wird analysiert…", "Das kann einen Moment dauern");
+
+    sendePlainText(FLOW_A_URL, nutzlast).then(function (text) {
+      overlayAus();
+      var antwort = jsonParsenWeich(text);
+      var hatInhalt = hatAnalyseFelder(antwort);
+      screen3Vorbereiten(hatInhalt ? antwort : null, !hatInhalt);
+    })["catch"](function () {
+      overlayAus();
+      screen3Vorbereiten(null, true);
+    });
+  });
+
+  // Schritt 2 - Ueberspringen
+  $("btnUeberspringen").addEventListener("click", function () {
+    zeigen($("fotoFehler"), false);
+    screen3Vorbereiten(null, false);
+  });
+
+  $("btnZurueck2").addEventListener("click", function () {
+    geheZu(1);
+  });
+
+  $("btnZurueck3").addEventListener("click", function () {
+    geheZu(2);
+  });
+
+  // Schritt 3 - E-Mail aendern
+  $("btnMailAendern").addEventListener("click", function () {
+    geheZu(1);
+    var feld = $("email");
+    if (feld) {
+      try { feld.focus(); } catch (e) { /* egal */ }
+    }
+  });
+
+  // Schritt 3 - Radios: Fehlerzustand loesen
+  (function () {
+    var liste = abteilungRadios();
+    var i;
+    for (i = 0; i < liste.length; i++) {
+      liste[i].addEventListener("change", function () {
+        abteilungFehlerAus();
+        zeigen($("formFehler"), false);
+      });
+    }
+  }());
+
+  $("titel").addEventListener("input", function () {
+    $("titel").classList.remove("fehlerhaft");
+  });
+
+  $("beschreibung").addEventListener("input", function () {
+    $("beschreibung").classList.remove("fehlerhaft");
+  });
+
+  // Schritt 3 - Absenden
+  $("btnAbsenden").addEventListener("click", function () {
+    if (sendetGerade) { return; }
+
+    var titel = $("titel").value.trim();
+    var beschreibung = $("beschreibung").value.trim();
+    var abteilung = abteilungLesen();
+    var mail = aktuelleEmail();
+
+    $("titel").classList.remove("fehlerhaft");
+    $("beschreibung").classList.remove("fehlerhaft");
+    abteilungFehlerAus();
+    zeigen($("sendeFehler"), false);
+
+    var maengel = [];
+    if (!titel) { maengel.push("Titel"); $("titel").classList.add("fehlerhaft"); }
+    if (!beschreibung) { maengel.push("Beschreibung"); $("beschreibung").classList.add("fehlerhaft"); }
+    if (!abteilung) {
+      maengel.push("Abteilung");
+      var abtListe = $("abtListe");
+      if (abtListe) { abtListe.classList.add("fehlerhaft"); }
+    }
+    if (!emailGueltig(mail)) { maengel.push("E-Mail-Adresse"); }
+
+    if (maengel.length) {
+      textSetzen($("formFehler"), "Bitte ausfüllen: " + maengel.join(", ") + ".");
+      zeigen($("formFehler"), true);
+      return;
+    }
+    zeigen($("formFehler"), false);
+
+    if (typeof FLOW_B_URL !== "string" || FLOW_B_URL.indexOf("%%") === 0) {
+      textSetzen($("sendeFehlerText"), "Backend noch nicht konfiguriert. Die Meldung kann aktuell nicht abgesendet werden – bitte den ICT-Servicedesk informieren.");
+      zeigen($("sendeFehler"), true);
+      return;
+    }
+
+    emailSpeichern(mail);
+
+    var nutzlast = {
+      email: mail,
+      titel: titel,
+      beschreibung: beschreibung,
+      abteilung: abteilung,
+      fotos: fotos.map(function (f) {
+        return { name: f.name, contentBase64: f.contentBase64 };
+      })
+    };
+
+    sendetGerade = true;
+    $("btnAbsenden").disabled = true;
+    overlayAn("Meldung wird gesendet…", "Einen Moment bitte");
+
+    sendePlainText(FLOW_B_URL, nutzlast).then(function () {
+      overlayAus();
+      sendetGerade = false;
+      $("btnAbsenden").disabled = false;
+      textSetzen($("erfolgInfo"), titel + " · " + abteilung);
+      geheZu(4);
+    })["catch"](function (fehler) {
+      overlayAus();
+      sendetGerade = false;
+      $("btnAbsenden").disabled = false;
+      var grund = (fehler && fehler.message === "Zeitüberschreitung")
+        ? "Die Verbindung hat zu lange gedauert."
+        : "Die Verbindung zum Server ist fehlgeschlagen.";
+      textSetzen($("sendeFehlerText"), grund + " Bitte prüfe deine Netzwerkverbindung und versuche es nochmals.");
+      zeigen($("sendeFehler"), true);
+    });
+  });
+
+  // Neue Meldung
+  $("btnNeu").addEventListener("click", function () {
+    fotos = [];
+    thumbsZeichnen();
+    $("titel").value = "";
+    $("beschreibung").value = "";
+    abteilungSetzen("");
+    abteilungFehlerAus();
+    zeigen($("analyseHinweis"), false);
+    zeigen($("sendeFehler"), false);
+    zeigen($("formFehler"), false);
+    zeigen($("fotoFehler"), false);
+    textSetzen($("fotoFehler"), "");
+    var gemerkt = emailLesen();
+    $("email").value = gemerkt;
+    emailAnzeigeAktualisieren();
+    geheZu(emailGueltig(gemerkt) ? 2 : 1);
+  });
+
+  /* ---------- Start ---------- */
+  (function starten() {
+    var gemerkt = emailLesen();
+    $("email").value = gemerkt;
+    emailAnzeigeAktualisieren();
+    thumbsZeichnen();
+    /* Bekannte E-Mail: direkt zu den Fotos, Schritt 1 bleibt per "Zurück" erreichbar */
+    geheZu(emailGueltig(gemerkt) ? 2 : 1);
+  }());
+}());
+</script>
+</body>
+</html>
