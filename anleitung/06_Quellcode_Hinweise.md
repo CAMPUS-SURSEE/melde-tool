@@ -1,8 +1,8 @@
-# Quellcode
+# Hinweise zum Quellcode
 
 **Stand:** 28.08.2026
 
-Der Ordner `site` enthält **die ganze Anwendung**: eine einzige HTML-Datei. Es gibt keinen Bauprozess, keine Abhängigkeiten zum Installieren und keinen Zwischenschritt. Was hier liegt, ist die Webseite.
+Der Ordner `frontend` enthält **die ganze Anwendung**: eine einzige HTML-Datei. Es gibt keinen Bauprozess, keine Abhängigkeiten zum Installieren und keinen Zwischenschritt. Was dort liegt, ist die Webseite – und genau dieser Ordner wird auf GitHub Pages veröffentlicht.
 
 ---
 
@@ -10,8 +10,9 @@ Der Ordner `site` enthält **die ganze Anwendung**: eine einzige HTML-Datei. Es 
 
 | Datei | Aufgabe |
 |---|---|
-| `site\index.html` | die komplette Anwendung: HTML, CSS und JavaScript in einer Datei, rund 1580 Zeilen |
-| `serve.ps1` | kleiner Server zum lokalen Anschauen |
+| `frontend\index.html` | die komplette Anwendung: HTML, CSS und JavaScript in einer Datei, rund 1580 Zeilen |
+| `frontend\.nojekyll` | verhindert, dass GitHub Pages die Dateien durch Jekyll schickt |
+| `code\serve.ps1` | kleiner Server zum lokalen Anschauen |
 
 Von aussen geladen wird nur Zierrat: die Schrift «Inter» von Google Fonts und das Campus-Sursee-Logo direkt von `www.campus-sursee.ch`. Beides ist optional – fällt es aus, sieht die Seite anders aus, funktioniert aber vollständig.
 
@@ -19,8 +20,10 @@ Von aussen geladen wird nur Zierrat: die Schrift «Inter» von Google Fonts und 
 
 ## Lokal anschauen
 
+Aus dem Wurzelverzeichnis der Ablage heraus:
+
 ```
-powershell -ExecutionPolicy Bypass -File serve.ps1
+powershell -ExecutionPolicy Bypass -File code\serve.ps1
 ```
 
 Danach im Browser `http://localhost:8123/` öffnen.
@@ -71,6 +74,6 @@ Ausführlich steht das in `..\03_Technische_Dokumentation.md`, Abschnitte 3, 4 u
 
 ## Verhältnis zum Arbeitsverzeichnis
 
-Dieser Ordner ist eine **Momentaufnahme** vom 28.08.2026. Gearbeitet wurde in `C:\Claude\problem-melder\`. Wer dort etwas ändert und veröffentlicht, sollte die Datei anschliessend hierher zurückspielen, damit Dokumentation und Wirklichkeit nicht auseinanderlaufen.
+Der Stand in `frontend\` ist eine **Momentaufnahme** vom 28.08.2026. Gearbeitet wurde in `C:\Claude\problem-melder\`. Wer dort etwas ändert und veröffentlicht, sollte die Datei anschliessend nach `frontend\` zurückspielen, damit Dokumentation und Wirklichkeit nicht auseinanderlaufen.
 
-Veröffentlicht wird von Hand. Zum Vorgehen siehe `..\04_Einrichtung_und_Deployment.md`, Abschnitte 2 und 3.
+Veröffentlicht wird über GitHub Pages beziehungsweise von Hand. Zum Vorgehen siehe `..\04_Einrichtung_und_Deployment.md`, Abschnitte 2 und 3.

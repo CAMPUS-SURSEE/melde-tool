@@ -5,7 +5,7 @@
 **Gilt für:** die Webseite «Problem melden» samt den beiden Power-Automate-Flows und dem KI-Prompt im KI-Hub
 **Verwandte Dokumente:** `03_Technische_Dokumentation.md` (Architektur und Kennungen), `04_Einrichtung_und_Deployment.md` (aufschalten und ändern)
 
-Alle Zitate von Fehlermeldungen in diesem Handbuch stammen wortgetreu aus `Quellcode\site\index.html` beziehungsweise aus den Flow-Läufen.
+Alle Zitate von Fehlermeldungen in diesem Handbuch stammen wortgetreu aus `frontend\index.html` beziehungsweise aus den Flow-Läufen.
 
 ---
 
@@ -139,7 +139,7 @@ oder
 
 **Prüfschritt:** Im Browser die Seite öffnen, Quelltext anzeigen (Strg + U), nach `FLOW_B_URL` suchen. Steht dort etwas mit `%%`, ist es dieser Fall.
 
-**Behebung:** Die richtige Fassung aus `Quellcode\site\index.html` veröffentlichen (Abschnitt 5.1). Diese Fassung enthält beide Adressen fertig eingetragen.
+**Behebung:** Die richtige Fassung aus `frontend\index.html` veröffentlichen (Abschnitt 5.1). Diese Fassung enthält beide Adressen fertig eingetragen.
 
 ### 3.3 Analyse liefert nichts, Felder bleiben leer
 
@@ -245,7 +245,7 @@ Wichtig: Die Bestätigung erscheint erst, wenn Flow B mit `{"ok":true}` geantwor
 
 **Ursache:** Die Datei wurde unvollständig oder gar nicht veröffentlicht. Die Seite hat keine Abhängigkeiten ausser den Schriften; wenn sie leer bleibt, fehlt sie selbst.
 
-**Behebung:** `Quellcode\site\index.html` neu veröffentlichen (Abschnitt 5.1).
+**Behebung:** `frontend\index.html` neu veröffentlichen (Abschnitt 5.1).
 
 **Symptom B:** Die Seite läuft, aber oben fehlt das Campus-Sursee-Logo, und im Browsertab fehlt das Symbol.
 
@@ -287,10 +287,10 @@ Wichtig: Die Bestätigung erscheint erst, wenn Flow B mit `{"ok":true}` geantwor
 
 ### 4.1 Die Seite lokal starten
 
-Im Ordner `Quellcode`:
+Im Wurzelverzeichnis der Ablage:
 
 ```
-powershell -ExecutionPolicy Bypass -File serve.ps1
+powershell -ExecutionPolicy Bypass -File code\serve.ps1
 ```
 
 Danach `http://localhost:8123/` öffnen. Die Seite spricht dabei mit den **echten** Flows; ein Testabsenden erzeugt also eine echte E-Mail an den Servicedesk. Titel deshalb mit «TEST» beginnen lassen.
@@ -312,7 +312,7 @@ Nützlich: In Flow A zeigt die Aktion «Einen Prompt ausführen» unter **Ausgab
 
 ### 4.3 Beide Flows von Hand testen
 
-Ein Aufruf von PowerShell aus, ohne Browser und ohne Seite. Nützlich, um Frontend und Backend sauber zu trennen. Die Aufrufadressen stehen im Quelltext von `Quellcode\site\index.html` bei `FLOW_A_URL` und `FLOW_B_URL`.
+Ein Aufruf von PowerShell aus, ohne Browser und ohne Seite. Nützlich, um Frontend und Backend sauber zu trennen. Die Aufrufadressen stehen im Quelltext von `frontend\index.html` bei `FLOW_A_URL` und `FLOW_B_URL`.
 
 **Flow A, Analyse:**
 
@@ -382,8 +382,8 @@ Steht bei einem POST ein Statuscode wie 400, 429 oder 502, gehört er ins Ticket
 
 Es gibt **keine** automatische Veröffentlichung.
 
-1. Änderung in `Quellcode\site\index.html` vornehmen.
-2. Lokal prüfen: `serve.ps1` starten, `http://localhost:8123/` öffnen, einmal ganz durchklicken. Testmeldungen mit «TEST» im Titel kennzeichnen.
+1. Änderung in `frontend\index.html` vornehmen.
+2. Lokal prüfen: `code\serve.ps1` starten, `http://localhost:8123/` öffnen, einmal ganz durchklicken. Testmeldungen mit «TEST» im Titel kennzeichnen.
 3. Datei am Zielort veröffentlichen. Vorgesehen ist Netlify wie bei der Menüwahl: Site auswählen, Reiter **Deploys**, den Ordner mit der `index.html` in das Feld für Drag & Drop ziehen.
 4. Nach dem Veröffentlichen den Browsercache umgehen (Strg und F5) und nochmals durchklicken.
 
@@ -422,7 +422,7 @@ Wird ein Trigger neu erstellt, ändert sich die Aufrufadresse und die Seite muss
 
 1. Flow im klassischen Designer öffnen, Trigger **«Beim Empfang einer HTTP-Anforderung»** aufklappen.
 2. Rechts neben **HTTP-POST-URL** auf das Kopiersymbol klicken.
-3. Adresse in `Quellcode\site\index.html` bei `FLOW_A_URL` beziehungsweise `FLOW_B_URL` eintragen.
+3. Adresse in `frontend\index.html` bei `FLOW_A_URL` beziehungsweise `FLOW_B_URL` eintragen.
 4. Seite neu veröffentlichen (Abschnitt 5.1).
 
 Die Adresse enthält eine Signatur (`sig=…`). Sie gehört **nicht** in Tickets, Mails oder Chats.
@@ -440,7 +440,7 @@ Diese Punkte sind bekannt und für einen Proof of Concept bewusst in Kauf genomm
 5. **Kein Schutz gegen Doppelmeldungen.** Wer nach einer Fehlermeldung nochmals sendet, obwohl die erste doch ankam, erzeugt zwei E-Mails.
 6. **Die Analyse kostet Geld.** Jeder Fotoschritt verbraucht Copilot-Guthaben, auch wenn die Meldung danach abgebrochen wird.
 7. **Abhängigkeit von zwei fremden Adressen.** Logo und Favicon kommen von `www.campus-sursee.ch`, die Schrift von Google Fonts. Beide Ausfälle sind harmlos: Die Seite bleibt vollständig benutzbar, sie sieht nur anders aus.
-8. **Keine Versionsverwaltung.** Es gibt kein Git. Der Stand in `Quellcode\` ist eine Momentaufnahme; wer im Arbeitsverzeichnis ändert, muss die Datei hierher zurückspielen.
+8. **Versionsverwaltung erst seit dieser Ablage.** Der Verlauf beginnt mit dieser Git-Ablage; alles davor ist nicht nachvollziehbar. Wer weiterhin im Arbeitsverzeichnis `C:\Claude\problem-melder\` ändert, muss die Datei nach `frontend\` zurückspielen, sonst läuft der veröffentlichte Stand auseinander.
 9. **Der Power-Automate-Designer ist unzuverlässig.** Der neue Designer konnte diesen Flow wiederholt nicht speichern, Ausdrucksfehler erscheinen als unsichtbare Browser-Dialoge, die die Seite einfrieren lassen, und ein Speichern kann still verloren gehen. Wer hier arbeitet, muss jede Änderung nachkontrollieren. Details in `03_Technische_Dokumentation.md`, Abschnitt 9.
 
 ---

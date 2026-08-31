@@ -70,7 +70,7 @@ Das ganze System ist **eine einzige HTML-Datei plus zwei Power-Automate-Flows**.
 
 ## 3. Die Webseite
 
-Alles liegt in `Quellcode\site\index.html`, rund 1580 Zeilen: HTML, CSS und JavaScript in einer Datei. Keine Frameworks, kein Bauprozess, keine `.js`-Module.
+Alles liegt in `frontend\index.html`, rund 1580 Zeilen: HTML, CSS und JavaScript in einer Datei. Keine Frameworks, kein Bauprozess, keine `.js`-Module.
 
 **Von aussen geladen wird nur Zierrat:**
 
@@ -369,7 +369,7 @@ Deshalb sendet die Seite ganz normal `Content-Type: application/json`.
 Auf dem Arbeitsplatz ist Node nicht installiert; Python ist vorhanden, dessen `http.server` liess sich aber nicht zuverlässig starten. Der beiliegende PowerShell-Server ist der Weg der Wahl.
 
 ```
-powershell -ExecutionPolicy Bypass -File Quellcode\serve.ps1
+powershell -ExecutionPolicy Bypass -File code\serve.ps1
 ```
 
 Danach `http://localhost:8123/` oder `http://127.0.0.1:8123/` öffnen.
@@ -389,7 +389,7 @@ Wer nur das Backend prüfen will, ruft die Flows direkt mit PowerShell auf; die 
 | Was | Wert |
 |---|---|
 | Webseite | noch nicht veröffentlicht, vorgesehen bei Netlify |
-| Quelldatei | `Quellcode\site\index.html`, rund 1580 Zeilen |
+| Quelldatei | `frontend\index.html`, rund 1580 Zeilen |
 | Arbeitsverzeichnis beim Bau | `C:\Claude\problem-melder\` |
 | Power-Automate-Umgebung | `Default-2553fb74-5dcc-4072-8bb5-399d18f72af9` («CAMPUS SURSEE (default)») |
 | Mandanten-ID | `2553fb74-5dcc-4072-8bb5-399d18f72af9` |
@@ -403,4 +403,4 @@ Wer nur das Backend prüfen will, ruft die Flows direkt mit PowerShell auf; die 
 | Schrift | Inter von Google Fonts |
 | Lokaler Testserver | `http://localhost:8123/` |
 
-Die Aufrufadressen der beiden Flows samt Signatur stehen bewusst nicht hier, sondern im Quelltext von `Quellcode\site\index.html`.
+Die Aufrufadressen der beiden Flows samt Signatur stehen bewusst nicht hier, sondern im Quelltext von `frontend\index.html`.

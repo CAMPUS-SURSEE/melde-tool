@@ -11,12 +11,12 @@ Mitarbeitende am Campus Sursee melden Mängel und Schäden über eine Webseite. 
 
 | Ich bin | Ich lese |
 |---|---|
-| Mitarbeiterin oder Mitarbeiter und will ein Problem melden | `01_Anleitung_Melden.md` |
-| beim Servicedesk und bekomme diese Meldungen | `01_Anleitung_Melden.md`, Abschnitt 5 |
-| bei den ICT-Services und habe eine Störung | `02_Betriebshandbuch_Support.md` |
-| bei den ICT-Services und will verstehen, wie es gebaut ist | `03_Technische_Dokumentation.md` |
-| dabei, es aufzuschalten oder etwas zu ändern | `04_Einrichtung_und_Deployment.md` |
-| neu im Projekt und frage mich, warum es so ist | `05_Entscheide_und_Verlauf.md` |
+| Mitarbeiterin oder Mitarbeiter und will ein Problem melden | `anleitung/01_Anleitung_Melden.md` |
+| beim Servicedesk und bekomme diese Meldungen | `anleitung/01_Anleitung_Melden.md`, Abschnitt 5 |
+| bei den ICT-Services und habe eine Störung | `anleitung/02_Betriebshandbuch_Support.md` |
+| bei den ICT-Services und will verstehen, wie es gebaut ist | `anleitung/03_Technische_Dokumentation.md` |
+| dabei, es aufzuschalten oder etwas zu ändern | `anleitung/04_Einrichtung_und_Deployment.md` |
+| neu im Projekt und frage mich, warum es so ist | `anleitung/05_Entscheide_und_Verlauf.md` |
 
 ---
 
@@ -24,16 +24,20 @@ Mitarbeitende am Campus Sursee melden Mängel und Schäden über eine Webseite. 
 
 ```
 Melde-Tool\
-├── 00_README.md                      dieses Dokument
-├── 01_Anleitung_Melden.md            Bedienung, für Meldende und Servicedesk
-├── 02_Betriebshandbuch_Support.md    Störungsbehebung, für die ICT
-├── 03_Technische_Dokumentation.md    Architektur, Flows, KI-Prompt, Schnittstellen
-├── 04_Einrichtung_und_Deployment.md  aufschalten, ändern, von Null aufbauen
-├── 05_Entscheide_und_Verlauf.md      warum es so gebaut ist, was offen ist
-└── Quellcode\
-    ├── site\index.html               die ganze Webseite, eine einzige Datei
-    ├── serve.ps1                     kleiner Server zum lokalen Testen
-    └── README_Quellcode.md           Hinweise für alle, die den Code ändern
+├── README.md                             dieses Dokument
+├── frontend\                             wird auf GitHub Pages veröffentlicht
+│   ├── index.html                        die ganze Webseite, eine einzige Datei
+│   └── .nojekyll                         schaltet die Jekyll-Verarbeitung ab
+├── code\
+│   └── serve.ps1                         kleiner Server zum lokalen Testen
+├── anleitung\
+│   ├── 01_Anleitung_Melden.md            Bedienung, für Meldende und Servicedesk
+│   ├── 02_Betriebshandbuch_Support.md    Störungsbehebung, für die ICT
+│   ├── 03_Technische_Dokumentation.md    Architektur, Flows, KI-Prompt, Schnittstellen
+│   ├── 04_Einrichtung_und_Deployment.md  aufschalten, ändern, von Null aufbauen
+│   ├── 05_Entscheide_und_Verlauf.md      warum es so gebaut ist, was offen ist
+│   └── 06_Quellcode_Hinweise.md          Hinweise für alle, die den Code ändern
+└── .github\workflows\pages.yml           veröffentlicht "frontend" auf GitHub Pages
 ```
 
 ---
@@ -67,14 +71,14 @@ Jede Meldung wird genau einer dieser vier Stellen zugeordnet. Die KI schlägt vo
 | Webseite und Veröffentlichung | ICT-Services |
 | Bearbeitung der eingehenden Meldungen | die vier Abteilungen, Eingang beim Servicedesk |
 
-Zugangsdaten und die Aufrufadressen der Flows samt Signatur stehen bewusst **nicht** in diesen Dokumenten. Sie stehen im Quelltext der Seite (`Quellcode\site\index.html`, ganz oben im `<script>`) und in Power Automate.
+Zugangsdaten und die Aufrufadressen der Flows samt Signatur stehen bewusst **nicht** in diesen Dokumenten. Sie stehen im Quelltext der Seite (`frontend\index.html`, ganz oben im `<script>`) und in Power Automate.
 
 ---
 
 ## Was vor dem Betrieb noch zu klären ist
 
-Der Reihe nach in `04_Einrichtung_und_Deployment.md`, Abschnitt 5. In Kürze:
+Der Reihe nach in `anleitung/04_Einrichtung_und_Deployment.md`, Abschnitt 5. In Kürze:
 
 1. **Adresse festlegen und aufschalten.** Die Seite liegt noch nirgends. Ohne Adresse gibt es nichts zu verteilen.
-2. **Missbrauch bedenken.** Die beiden Flows sind anonym aufrufbar, die Adressen stehen im Quelltext jeder ausgelieferten Seite. Wer sie ausliest, kann E-Mails an den Servicedesk auslösen. Für einen Proof of Concept vertretbar, vor dem Dauerbetrieb zu entscheiden. Siehe `05_Entscheide_und_Verlauf.md`, Abschnitt 8.
+2. **Missbrauch bedenken.** Die beiden Flows sind anonym aufrufbar, die Adressen stehen im Quelltext jeder ausgelieferten Seite. Wer sie ausliest, kann E-Mails an den Servicedesk auslösen. Für einen Proof of Concept vertretbar, vor dem Dauerbetrieb zu entscheiden. Siehe `anleitung/05_Entscheide_und_Verlauf.md`, Abschnitt 8.
 3. **Kosten im Auge behalten.** Jede Fotoanalyse verbraucht rund 3 Copilot-Guthaben.
