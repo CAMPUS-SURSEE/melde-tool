@@ -45,37 +45,44 @@ Die Seite ist eine einzige Datei ohne Abhängigkeiten. Sie läuft überall, wo s
 - Ein eigener Webserver ist nicht nötig, ebenso wenig eine Datenbank.
 - Es braucht keine Anmeldung und keine App-Registrierung in Entra ID. Das ist der grosse Unterschied zur Menüwahl.
 
-### 2.2 Weg A: Netlify, wie bei der Menüwahl
+### 2.2 Netlify, der vorgesehene Weg
 
-Der naheliegende Weg, weil dort bereits eine Site betrieben wird und das Vorgehen bekannt ist.
+Netlify ist gesetzt, weil dort bereits eine Site betrieben wird und das Vorgehen bekannt ist. Die Datei `netlify.toml` im Wurzelverzeichnis beschreibt alles Nötige:
 
-1. `https://app.netlify.com` öffnen und eine neue Site anlegen, oder die Datei in eine bestehende Site legen.
-2. Den Ordner `frontend\` verwenden; er enthält genau die `index.html` und sonst nichts.
-3. Diesen Ordner im Reiter **Deploys** in das Feld für Drag & Drop ziehen.
-4. Warten, bis der Deploy als «Published» markiert ist.
-5. Gewünschte Adresse einrichten, zum Beispiel `melden.campus-sursee.ch`, und den DNS-Eintrag setzen lassen.
+| Eintrag | Bedeutung |
+|---|---|
+| `publish = "frontend"` | Netlify liefert genau diesen Ordner aus, also die `index.html` und sonst nichts |
+| `command = ""` | kein Bauprozess, nichts zu installieren |
+| Umleitung `/*` → `/index.html` | jede Adresse unterhalb der Site zeigt die Anwendung statt einer 404-Seite |
+| Kopfzeilen | `X-Content-Type-Options`, `Referrer-Policy`, `X-Frame-Options` und eine `Permissions-Policy`, die die Kamera erlaubt und Mikrofon und Standort sperrt |
 
-Anders als bei der Menüwahl gibt es hier **keine** `_headers`-Datei und keine Content Security Policy. Wer eine setzen will, muss vier Quellen zulassen: den Power-Automate-Host für die beiden Flows, `fonts.googleapis.com` und `fonts.gstatic.com` für die Schrift sowie `www.campus-sursee.ch` für das Logo. Eine zu enge Regel blockiert die Aufrufe stillschweigend, und die Seite scheint grundlos nicht zu funktionieren.
+#### Weg A: an die Ablage anbinden (empfohlen)
 
-### 2.3 Weg B: GitHub Pages
+1. `https://app.netlify.com` öffnen, **Add new site → Import an existing project**, die Git-Ablage auswählen.
+2. Netlify liest `netlify.toml` selbst ein. Die Felder für Build command und Publish directory bleiben leer beziehungsweise auf den dort gesetzten Werten – **nichts von Hand eintragen**.
+3. **Deploy site**. Ab jetzt veröffentlicht jeder Push auf `main` von selbst.
+4. Gewünschte Adresse einrichten, zum Beispiel `melden.campus-sursee.ch`, unter **Domain management**, und den DNS-Eintrag setzen lassen.
 
-Dafür ist die Ablage aufgebaut: Der Ordner `frontend\` enthält genau das, was ausgeliefert werden soll.
+#### Weg B: von Hand hochladen
 
-1. Im Repository unter **Settings → Pages** als Quelle **GitHub Actions** wählen.
-2. Der mitgelieferte Ablauf `.github/workflows/pages.yml` veröffentlicht bei jedem Push auf `main` den Inhalt von `frontend\`.
-3. Nach dem ersten Durchlauf steht die Adresse unter **Settings → Pages**; eine eigene Adresse wie `melden.campus-sursee.ch` lässt sich dort als **Custom domain** eintragen, der DNS-Eintrag muss separat gesetzt werden.
+Wenn keine Anbindung an die Ablage gewünscht ist:
 
-> **Warum ein Ablauf und nicht einfach ein Ordner?** GitHub Pages kann bei der Quelle «Deploy from a branch» nur die Wurzel oder `/docs` auswählen, nicht `/frontend`. Über GitHub Actions ist der Ordner frei wählbar; deshalb liegt der Ablauf bei.
+1. Im Reiter **Deploys** den Ordner `frontend\` in das Feld für Drag & Drop ziehen.
+2. Warten, bis der Deploy als «Published» markiert ist.
 
-`https://` liefert GitHub Pages von sich aus, die Voraussetzung aus 2.1 ist damit erfüllt. Eine Content Security Policy lässt sich hier nicht setzen; die Hinweise dazu aus 2.2 sind entsprechend gegenstandslos.
+> **Achtung bei diesem Weg:** `netlify.toml` liegt im Wurzelverzeichnis, nicht in `frontend\`. Wird nur der Ordner hochgeladen, gelten Umleitung und Kopfzeilen **nicht**. Die Anwendung funktioniert trotzdem; wer die Kopfzeilen auch hier will, zieht stattdessen das ganze Wurzelverzeichnis hinein.
 
-### 2.4 Weg C: SharePoint oder Intranet
+#### Content Security Policy
+
+Anders als bei der Menüwahl ist **keine** Content Security Policy aktiv. Eine vollständige, passende Regel steht auskommentiert am Ende von `netlify.toml` und lässt sich durch Entfernen der Rautenzeichen einschalten. Sie erlaubt vier Quellen: den Power-Automate-Host für die beiden Flows, `fonts.googleapis.com` und `fonts.gstatic.com` für die Schrift sowie `www.campus-sursee.ch` für Logo und Favicon. Eine zu enge Regel blockiert die Aufrufe stillschweigend, und die Seite scheint grundlos nicht zu funktionieren – nach dem Einschalten deshalb die Prüfliste aus 2.4 durchgehen.
+
+### 2.3 Ausweichweg: SharePoint oder Intranet
 
 Denkbar, wenn die Seite nur intern erreichbar sein soll – das entschärft zugleich den Missbrauchspunkt aus Abschnitt 5.
 
 Zu bedenken: Auf einer klassischen SharePoint-Seite wird eingebettetes JavaScript je nach Mandanteneinstellung blockiert. Ein Ablegen als Datei in einer Dokumentbibliothek liefert die Seite in der Regel zum Download aus statt sie darzustellen. Wer diesen Weg geht, prüft das vorher an einem Testgerät, und zwar mit dem Handy, nicht nur am PC.
 
-### 2.5 Nach dem Aufschalten prüfen
+### 2.4 Nach dem Aufschalten prüfen
 
 Diese Prüfliste einmal vollständig durchgehen, am besten mit dem Handy im Mobilfunknetz, nicht nur im WLAN:
 
@@ -93,7 +100,7 @@ Diese Prüfliste einmal vollständig durchgehen, am besten mit dem Handy im Mobi
 
 ## 3. Eine Änderung veröffentlichen
 
-Es gibt **keine** Git-Anbindung und keine automatische Veröffentlichung.
+Ist die Site nach 2.2 an die Ablage angebunden, veröffentlicht Netlify jeden Push auf `main` von selbst. Ohne Anbindung wird von Hand hochgeladen.
 
 1. Änderung in `frontend\index.html` vornehmen.
 2. Lokal prüfen:
@@ -101,8 +108,8 @@ Es gibt **keine** Git-Anbindung und keine automatische Veröffentlichung.
    powershell -ExecutionPolicy Bypass -File code\serve.ps1
    ```
    Danach `http://localhost:8123/` öffnen und einmal ganz durchklicken. Die Seite spricht dabei mit den echten Flows; Testmeldungen also mit «TEST» im Titel kennzeichnen.
-3. Datei veröffentlichen, siehe Abschnitt 2.2 oder 2.3.
-4. Mit Strg und F5 den Cache umgehen und die Prüfliste aus 2.5 zumindest in den Punkten 1, 5 und 6 wiederholen.
+3. Veröffentlichen: mit Anbindung `git commit` und `git push` auf `main`; ohne Anbindung den Ordner nach 2.2, Weg B hochladen.
+4. Mit Strg und F5 den Cache umgehen und die Prüfliste aus 2.4 zumindest in den Punkten 1, 5 und 6 wiederholen.
 
 Bei Netlify lässt sich ein fehlerhafter Stand über den Deploy-Verlauf sofort zurücksetzen. Das ist der schnellste Ausweg, wenn nach einer Änderung nichts mehr geht.
 
@@ -206,6 +213,6 @@ Falls die Umgebung verloren geht, in dieser Reihenfolge:
 
 1. Beide Flows von Hand aufrufen, siehe `02_Betriebshandbuch_Support.md`, Abschnitt 4.3.
 2. Seite lokal starten und einmal ganz durchklicken.
-3. Seite veröffentlichen und die Prüfliste aus Abschnitt 2.5 abarbeiten.
+3. Seite veröffentlichen und die Prüfliste aus Abschnitt 2.4 abarbeiten.
 
 > Rechnen Sie beim Neuaufbau der Flows Zeit für die Eigenheiten des Designers ein. Die Sammlung in `03_Technische_Dokumentation.md`, Abschnitt 9, entstand genau dabei und erspart die meisten Sackgassen.

@@ -25,26 +25,25 @@ Mitarbeitende am Campus Sursee melden Mängel und Schäden über eine Webseite. 
 ```
 Melde-Tool\
 ├── README.md                             dieses Dokument
-├── frontend\                             wird auf GitHub Pages veröffentlicht
-│   ├── index.html                        die ganze Webseite, eine einzige Datei
-│   └── .nojekyll                         schaltet die Jekyll-Verarbeitung ab
+├── netlify.toml                          Veröffentlichung: liefert "frontend" aus
+├── frontend\
+│   └── index.html                        die ganze Webseite, eine einzige Datei
 ├── code\
 │   └── serve.ps1                         kleiner Server zum lokalen Testen
-├── anleitung\
-│   ├── 01_Anleitung_Melden.md            Bedienung, für Meldende und Servicedesk
-│   ├── 02_Betriebshandbuch_Support.md    Störungsbehebung, für die ICT
-│   ├── 03_Technische_Dokumentation.md    Architektur, Flows, KI-Prompt, Schnittstellen
-│   ├── 04_Einrichtung_und_Deployment.md  aufschalten, ändern, von Null aufbauen
-│   ├── 05_Entscheide_und_Verlauf.md      warum es so gebaut ist, was offen ist
-│   └── 06_Quellcode_Hinweise.md          Hinweise für alle, die den Code ändern
-└── .github\workflows\pages.yml           veröffentlicht "frontend" auf GitHub Pages
+└── anleitung\
+    ├── 01_Anleitung_Melden.md            Bedienung, für Meldende und Servicedesk
+    ├── 02_Betriebshandbuch_Support.md    Störungsbehebung, für die ICT
+    ├── 03_Technische_Dokumentation.md    Architektur, Flows, KI-Prompt, Schnittstellen
+    ├── 04_Einrichtung_und_Deployment.md  aufschalten, ändern, von Null aufbauen
+    ├── 05_Entscheide_und_Verlauf.md      warum es so gebaut ist, was offen ist
+    └── 06_Quellcode_Hinweise.md          Hinweise für alle, die den Code ändern
 ```
 
 ---
 
 ## In drei Sätzen, wie es funktioniert
 
-Die Webseite ist eine einzige HTML-Datei ohne Server und ohne Datenbank; sie soll bei Netlify liegen wie schon die Menüwahl. Die Fotos gehen an einen Power-Automate-Flow, der sie von der KI im Power-Platform-KI-Hub (Modell GPT-5 chat) beschreiben und einer Abteilung zuordnen lässt; das Ergebnis füllt das Formular vor. Beim Absenden schickt ein zweiter Flow alles als E-Mail mit den Fotos im Anhang an `servicedesk@campus-sursee.ch`.
+Die Webseite ist eine einzige HTML-Datei ohne Server und ohne Datenbank; sie soll bei Netlify liegen wie schon die Menüwahl, ausgeliefert wird der Ordner `frontend\` gemäss `netlify.toml`. Die Fotos gehen an einen Power-Automate-Flow, der sie von der KI im Power-Platform-KI-Hub (Modell GPT-5 chat) beschreiben und einer Abteilung zuordnen lässt; das Ergebnis füllt das Formular vor. Beim Absenden schickt ein zweiter Flow alles als E-Mail mit den Fotos im Anhang an `servicedesk@campus-sursee.ch`.
 
 ---
 

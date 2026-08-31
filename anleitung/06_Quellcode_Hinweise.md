@@ -2,7 +2,7 @@
 
 **Stand:** 28.08.2026
 
-Der Ordner `frontend` enthält **die ganze Anwendung**: eine einzige HTML-Datei. Es gibt keinen Bauprozess, keine Abhängigkeiten zum Installieren und keinen Zwischenschritt. Was dort liegt, ist die Webseite – und genau dieser Ordner wird auf GitHub Pages veröffentlicht.
+Der Ordner `frontend` enthält **die ganze Anwendung**: eine einzige HTML-Datei. Es gibt keinen Bauprozess, keine Abhängigkeiten zum Installieren und keinen Zwischenschritt. Was dort liegt, ist die Webseite – und genau dieser Ordner wird von Netlify ausgeliefert, siehe `netlify.toml` im Wurzelverzeichnis.
 
 ---
 
@@ -11,8 +11,8 @@ Der Ordner `frontend` enthält **die ganze Anwendung**: eine einzige HTML-Datei.
 | Datei | Aufgabe |
 |---|---|
 | `frontend\index.html` | die komplette Anwendung: HTML, CSS und JavaScript in einer Datei, rund 1580 Zeilen |
-| `frontend\.nojekyll` | verhindert, dass GitHub Pages die Dateien durch Jekyll schickt |
 | `code\serve.ps1` | kleiner Server zum lokalen Anschauen |
+| `netlify.toml` | Veröffentlichung: Publish-Ordner, Umleitung, Kopfzeilen |
 
 Von aussen geladen wird nur Zierrat: die Schrift «Inter» von Google Fonts und das Campus-Sursee-Logo direkt von `www.campus-sursee.ch`. Beides ist optional – fällt es aus, sieht die Seite anders aus, funktioniert aber vollständig.
 
@@ -76,4 +76,4 @@ Ausführlich steht das in `..\03_Technische_Dokumentation.md`, Abschnitte 3, 4 u
 
 Der Stand in `frontend\` ist eine **Momentaufnahme** vom 28.08.2026. Gearbeitet wurde in `C:\Claude\problem-melder\`. Wer dort etwas ändert und veröffentlicht, sollte die Datei anschliessend nach `frontend\` zurückspielen, damit Dokumentation und Wirklichkeit nicht auseinanderlaufen.
 
-Veröffentlicht wird über GitHub Pages beziehungsweise von Hand. Zum Vorgehen siehe `..\04_Einrichtung_und_Deployment.md`, Abschnitte 2 und 3.
+Veröffentlicht wird über Netlify. Zum Vorgehen siehe `04_Einrichtung_und_Deployment.md`, Abschnitte 2 und 3.

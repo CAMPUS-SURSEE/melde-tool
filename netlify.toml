@@ -1,0 +1,43 @@
+# Netlify-Konfiguration fuer das Melde-Tool.
+#
+# Es gibt keinen Bauprozess: Der Ordner "frontend" wird unveraendert
+# ausgeliefert. Die ganze Anwendung ist die darin liegende index.html.
+#
+# Einrichtung siehe anleitung/04_Einrichtung_und_Deployment.md, Abschnitt 2.2.
+
+[build]
+  publish = "frontend"
+  command = ""
+
+# Alles auf die einzige Seite leiten, damit auch ein Tippfehler in der
+# Adresse (z. B. /melden) die Anwendung zeigt statt einer 404-Seite.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    X-Frame-Options = "SAMEORIGIN"
+    # Der Fotoschritt laeuft ueber den Datei-Dialog, nicht ueber getUserMedia.
+    # camera=(self) bleibt trotzdem erlaubt, damit nichts unbeabsichtigt sperrt.
+    Permissions-Policy = "camera=(self), microphone=(), geolocation=()"
+
+# Content Security Policy: bewusst NICHT aktiv.
+#
+# Die Seite laeuft ohne sie vollstaendig. Wer sie einschalten will,
+# entfernt die Rautenzeichen der folgenden vier Zeilen. Eine zu enge Regel
+# blockiert die Aufrufe stillschweigend - danach unbedingt die Pruefliste
+# aus anleitung/04_Einrichtung_und_Deployment.md, Abschnitt 2.5 durchgehen.
+#
+# Enthalten sind: der Power-Automate-Host fuer die beiden Flows, Google
+# Fonts fuer die Schrift, www.campus-sursee.ch fuer Logo und Favicon sowie
+# 'unsafe-inline' fuer das in der index.html eingebettete CSS und JavaScript.
+#
+# [[headers]]
+#   for = "/*"
+#   [headers.values]
+#     Content-Security-Policy = "default-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://www.campus-sursee.ch; connect-src https://default2553fb745dcc40728bb5399d18f72a.f9.environment.api.powerplatform.com:443; base-uri 'none'; form-action 'none'; frame-ancestors 'self'"
